@@ -44,7 +44,7 @@ export default function MusicListPage() {
     const fetch = async () => {
       const result = await fetchSongsByStatus(statusMap[selectedTab]);
       setSongs(result);
-      setSelectedSong(null); // 탭 전환 시 선택곡 초기화
+      setSelectedSong(null);
     };
     fetch();
   }, [selectedTab]);
@@ -59,17 +59,6 @@ export default function MusicListPage() {
   return (
     <div className="p-6 bg-black min-h-screen text-white">
       <h1 className="text-2xl font-bold mb-4">🎵 관리자 - 음악 관리</h1>
-
-      {/* 오디오 플레이어 (상단 고정) */}
-      {selectedSong && (
-        <div className="mb-6 p-4 bg-white/10 rounded-xl">
-          <div className="text-xl font-bold mb-1">{selectedSong.title}</div>
-          <div className="text-sm text-gray-400 mb-2">
-            {selectedSong.nickname} · {selectedSong.genre}
-          </div>
-          <audio controls src={selectedSong.audioURL} className="w-full mb-4" />
-        </div>
-      )}
 
       {/* 탭 버튼 */}
       <div className="flex gap-4 mb-6 flex-wrap">
@@ -110,7 +99,97 @@ export default function MusicListPage() {
         </select>
       </div>
 
-      {/* 그리드 카드 리스트 */}
+      {/* 오디오 플레이어 (검색 밑으로 이동) */}
+      {selectedSong && (
+        <div className="mb-6 p-4 bg-white/10 rounded-xl">
+          <div className="text-xl font-bold mb-1">{selectedSong.title}</div>
+          <div className="text-sm text-gray-400 mb-2">
+            {selectedSong.nickname} · {selectedSong.genre}
+          </div>
+          <audio controls src={selectedSong.audioURL} className="w-full mb-4" />
+
+          {/* 관리 버튼 (플레이어 박스 안으로 이동) */}
+          <div className="flex flex-wrap gap-2">
+            {selectedTab === "업로드 신청곡" && (
+              <>
+                <button
+                  onClick={async () => {
+                    await approveSong(selectedSong.id);
+                    setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+                    setSelectedSong(null);
+                  }}
+                  className="bg-green-600 px-4 py-1 rounded hover:bg-green-700"
+                >
+                  업로드
+                </button>
+                <button
+                  onClick={async () => {
+                    await rejectSong(selectedSong.id);
+                    setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+                    setSelectedSong(null);
+                  }}
+                  className="bg-red-600 px-4 py-1 rounded hover:bg-red-700"
+                >
+                  반려
+                </button>
+              </>
+            )}
+
+            {selectedTab === "업로드 된 곡" && (
+              <>
+                <button
+                  onClick={async () => {
+                    await pauseSong(selectedSong.id);
+                    setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+                    setSelectedSong(null);
+                  }}
+                  className="bg-yellow-600 px-4 py-1 rounded hover:bg-yellow-700"
+                >
+                  정지
+                </button>
+                <button
+                  onClick={async () => {
+                    await deleteSong(selectedSong.id);
+                    setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+                    setSelectedSong(null);
+                  }}
+                  className="bg-red-700 px-4 py-1 rounded hover:bg-red-800"
+                >
+                  삭제
+                </button>
+              </>
+            )}
+
+            {selectedTab === "정지된 곡" && (
+              <button
+                onClick={async () => {
+                  await approveSong(selectedSong.id);
+                  setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+                  setSelectedSong(null);
+                }}
+                className="bg-purple-600 px-4 py-1 rounded hover:bg-purple-700"
+              >
+                되살리기
+              </button>
+            )}
+
+            {selectedTab === "삭제된 곡" && (
+              <button
+                onClick={async () => {
+                  await restoreSong(selectedSong.id);
+                  setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+                  setSelectedSong(null);
+                }}
+                className="bg-blue-600 px-4 py-1 rounded hover:bg-blue-700"
+              >
+                복원
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 카드 리스트 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {filteredSongs.map((song) => (
           <div
@@ -132,87 +211,6 @@ export default function MusicListPage() {
           </div>
         ))}
       </div>
-
-      {/* 관리 버튼 */}
-      {selectedSong && (
-        <div className="mt-10 flex flex-wrap gap-2">
-          {selectedTab === "업로드 신청곡" && (
-            <>
-              <button
-                onClick={async () => {
-                  await approveSong(selectedSong.id);
-                  setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
-                  setSelectedSong(null);
-                }}
-                className="bg-green-600 px-4 py-1 rounded hover:bg-green-700"
-              >
-                업로드
-              </button>
-              <button
-                onClick={async () => {
-                  await rejectSong(selectedSong.id);
-                  setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
-                  setSelectedSong(null);
-                }}
-                className="bg-red-600 px-4 py-1 rounded hover:bg-red-700"
-              >
-                반려
-              </button>
-            </>
-          )}
-
-          {selectedTab === "업로드 된 곡" && (
-            <>
-              <button
-                onClick={async () => {
-                  await pauseSong(selectedSong.id);
-                  setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
-                  setSelectedSong(null);
-                }}
-                className="bg-yellow-600 px-4 py-1 rounded hover:bg-yellow-700"
-              >
-                정지
-              </button>
-              <button
-                onClick={async () => {
-                  await deleteSong(selectedSong.id);
-                  setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
-                  setSelectedSong(null);
-                }}
-                className="bg-red-700 px-4 py-1 rounded hover:bg-red-800"
-              >
-                삭제
-              </button>
-            </>
-          )}
-
-          {selectedTab === "정지된 곡" && (
-            <button
-              onClick={async () => {
-                await approveSong(selectedSong.id);
-                setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
-                setSelectedSong(null);
-              }}
-              className="bg-purple-600 px-4 py-1 rounded hover:bg-purple-700"
-            >
-              되살리기
-            </button>
-          )}
-
-          {selectedTab === "삭제된 곡" && (
-            <button
-              onClick={async () => {
-                await restoreSong(selectedSong.id);
-                setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
-                setSelectedSong(null);
-              }}
-              className="bg-blue-600 px-4 py-1 rounded hover:bg-blue-700"
-            >
-              복원
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }
