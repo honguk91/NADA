@@ -22,6 +22,7 @@ interface User {
   isPermanentlyBanned?: boolean;
   suspensionCount?: number;
   artistLevel?: 'rookie' | 'amateur' | 'pro';
+  fanCount?: number; 
 }
 
 export default function UsersPage() {
@@ -233,7 +234,12 @@ export default function UsersPage() {
               key={user.id}
               className="border border-zinc-700 rounded p-4 bg-zinc-900 relative"
             >
-              <p className="text-lg font-semibold">{user.nickname || '닉네임 없음'}</p>
+              <p className="text-lg font-semibold">
+              {user.nickname || '닉네임 없음'}
+              {user.isArtist && user.fanCount !== undefined && (
+            <span className="ml-2 text-sm text-zinc-400">👥 팬 {user.fanCount}명</span>
+  )}
+</p>
               <p className="text-sm text-zinc-400">{user.email}</p>
               <p className="text-sm mt-1">
                 유형:{' '}
