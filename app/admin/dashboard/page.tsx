@@ -65,6 +65,14 @@ export default function AdminDashboardPage() {
   </div>
 </Link>
 
+<Link href="/admin/dashboard/np">
+  <div className="bg-zinc-800 hover:bg-zinc-700 p-6 rounded-xl shadow-md cursor-pointer transition">
+    <h2 className="text-xl font-semibold mb-2">📀 NP 관리소</h2>
+    <p className="text-sm text-zinc-400">NP코인을 충전하거나 회수하고 거래 내역을 확인할 수 있습니다.</p>
+  </div>
+</Link>
+
+
         </div>
       </div>
     </div>
