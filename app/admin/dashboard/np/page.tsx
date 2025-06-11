@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { db } from '@/lib/firebase';
+import { db, auth } from '@/lib/firebase';
 import {
   collection,
   doc,
@@ -83,7 +83,7 @@ export default function AdminNPManagementPage() {
   };
 
   const updateNP = async (type: 'charge' | 'deduct') => {
-    if (!user) return;
+    if (!user || !auth.currentUser) return;
 
     const newBalance =
       type === 'charge'
@@ -94,7 +94,7 @@ export default function AdminNPManagementPage() {
     await updateDoc(userRef, { np: newBalance });
 
     await addDoc(collection(db, 'transactions'), {
-      fromUserId: 'ADMIN',
+      fromUserId: auth.currentUser.uid,
       toUserId: user.id,
       amount: type === 'charge' ? amount : -amount,
       context: type === 'charge' ? '관리자 충전' : '관리자 회수',
@@ -184,7 +184,7 @@ export default function AdminNPManagementPage() {
                     <td>{log.amount}</td>
                     <td>{log.context}</td>
                     <td>
-                      {log.fromUserId === 'ADMIN'
+                      {log.fromUserId === auth.currentUser?.uid
                         ? '관리자 지급'
                         : log.fromUserId === user?.id
                         ? '보낸 NP'
