@@ -172,6 +172,7 @@ export default function AdminNPManagementPage() {
                   <th className="pb-2">받는 사람</th>
                   <th className="pb-2">수량</th>
                   <th className="pb-2">사유</th>
+                  <th className="pb-2">유형</th>
                 </tr>
               </thead>
               <tbody>
@@ -182,6 +183,13 @@ export default function AdminNPManagementPage() {
                     <td>{log.toUserId}</td>
                     <td>{log.amount}</td>
                     <td>{log.context}</td>
+                    <td>
+                      {log.fromUserId === 'ADMIN'
+                        ? '관리자 지급'
+                        : log.fromUserId === user?.id
+                        ? '보낸 NP'
+                        : '받은 NP'}
+                    </td>
                   </tr>
                 ))}
               </tbody>
