@@ -16,9 +16,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "NADA",
   description: "NADA 관리자 대시보드",
-  icons: {
-    icon: "/favicon.ico",
-  },
 };
 
 
