@@ -20,6 +20,7 @@ interface Song {
   isPending: boolean;
   isVisible: boolean;
   isDeleted: boolean;
+  likeCount?: number;
 }
 
 const statusMap = {
@@ -204,9 +205,16 @@ export default function MusicListPage() {
               alt="썸네일"
               className="w-full h-40 object-cover"
             />
-            <div className="p-4">
-              <div className="text-lg font-semibold">{song.title}</div>
-              <div className="text-sm text-gray-400">{song.nickname} · {song.genre}</div>
+             <div className="p-4">
+              <div className="text-lg font-semibold">
+                {song.title}
+                {typeof song.likeCount === "number" && (
+                  <span className="ml-2 text-sm text-purple-400">❤️ {song.likeCount}</span>
+                )}
+              </div>
+              <div className="text-sm text-gray-400">
+                {song.nickname} · {song.genre}
+              </div>
             </div>
           </div>
         ))}
@@ -214,3 +222,4 @@ export default function MusicListPage() {
     </div>
   );
 }
+
