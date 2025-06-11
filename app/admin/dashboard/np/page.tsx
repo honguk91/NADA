@@ -1,19 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { db } from '@/lib/firebase';
 import {
   collection,
   doc,
-  getDoc,
+  getDocs,
   updateDoc,
   addDoc,
   query,
   where,
-  orderBy,
-  getDocs,
-  or,
-  QueryConstraint
+  orderBy
 } from 'firebase/firestore';
 
 interface UserModel {
@@ -58,14 +55,31 @@ export default function AdminNPManagementPage() {
   };
 
   const fetchLogs = async (uid: string) => {
-    const q = query(
+    const fromQuery = query(
       collection(db, 'transactions'),
-      or(where('fromUserId', '==', uid), where('toUserId', '==', uid)),
+      where('fromUserId', '==', uid),
       orderBy('timestamp', 'desc')
     );
-    const snapshot = await getDocs(q);
-    const result = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as TransactionLog));
-    setLogs(result);
+
+    const toQuery = query(
+      collection(db, 'transactions'),
+      where('toUserId', '==', uid),
+      orderBy('timestamp', 'desc')
+    );
+
+    const [fromSnapshot, toSnapshot] = await Promise.all([
+      getDocs(fromQuery),
+      getDocs(toQuery),
+    ]);
+
+    const fromLogs = fromSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as TransactionLog));
+    const toLogs = toSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as TransactionLog));
+
+    const merged = [...fromLogs, ...toLogs]
+      .filter((v, i, arr) => arr.findIndex(x => x.id === v.id) === i)
+      .sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
+
+    setLogs(merged);
   };
 
   const updateNP = async (type: 'charge' | 'deduct') => {
