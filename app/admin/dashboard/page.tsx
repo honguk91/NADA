@@ -56,6 +56,14 @@ export default function AdminDashboardPage() {
               <p className="text-sm text-zinc-400">사용자를 일시중지하거나 완전 차단할 수 있습니다.</p>
             </div>
           </Link>
+
+          <Link href="/admin/dashboard/contact">
+  <div className="bg-zinc-800 hover:bg-zinc-700 p-6 rounded-xl shadow-md cursor-pointer transition">
+    <h2 className="text-xl font-semibold mb-2">📨 문의 관리</h2>
+    <p className="text-sm text-zinc-400">사용자들이 보낸 문의 내용을 확인할 수 있습니다.</p>
+  </div>
+</Link>
+
         </div>
       </div>
     </div>
