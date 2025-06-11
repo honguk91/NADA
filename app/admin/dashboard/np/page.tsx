@@ -12,6 +12,8 @@ import {
   where,
   orderBy,
   getDocs,
+  or,
+  QueryConstraint
 } from 'firebase/firestore';
 
 interface UserModel {
@@ -58,7 +60,7 @@ export default function AdminNPManagementPage() {
   const fetchLogs = async (uid: string) => {
     const q = query(
       collection(db, 'transactions'),
-      where('fromUserId', '==', uid),
+      or(where('fromUserId', '==', uid), where('toUserId', '==', uid)),
       orderBy('timestamp', 'desc')
     );
     const snapshot = await getDocs(q);
