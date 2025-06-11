@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { db, auth } from '@/lib/firebase';
 import {
   collection,
   doc,
   getDocs,
+  getDoc,
   updateDoc,
   addDoc,
   query,
@@ -26,6 +27,8 @@ interface TransactionLog {
   amount: number;
   context: string;
   timestamp: any;
+  fromNickname?: string;
+  toNickname?: string;
 }
 
 export default function AdminNPManagementPage() {
@@ -54,6 +57,12 @@ export default function AdminNPManagementPage() {
     }
   };
 
+  const fetchNickname = async (uid: string) => {
+    if (uid === auth.currentUser?.uid) return 'ADMIN';
+    const docSnap = await getDoc(doc(db, 'users', uid));
+    return docSnap.exists() ? docSnap.data().nickname || uid : uid;
+  };
+
   const fetchLogs = async (uid: string) => {
     const fromQuery = query(
       collection(db, 'transactions'),
@@ -70,14 +79,29 @@ export default function AdminNPManagementPage() {
       getDocs(toQuery),
     ]);
 
-    const fromLogs = fromSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as TransactionLog));
-    const toLogs = toSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as TransactionLog));
-
-    const merged = [...fromLogs, ...toLogs]
+    const merged = [...fromSnapshot.docs, ...toSnapshot.docs]
       .filter((v, i, arr) => arr.findIndex(x => x.id === v.id) === i)
-      .sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
+      .sort((a, b) => b.data().timestamp?.seconds - a.data().timestamp?.seconds);
 
-    setLogs(merged);
+   const enrichedLogs = await Promise.all(
+  merged.map(async (doc): Promise<TransactionLog> => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      fromUserId: data.fromUserId,
+      toUserId: data.toUserId,
+      amount: data.amount,
+      context: data.context,
+      timestamp: data.timestamp,
+      fromNickname: await fetchNickname(data.fromUserId),
+      toNickname: await fetchNickname(data.toUserId),
+    };
+  })
+);
+
+
+
+    setLogs(enrichedLogs);
   };
 
   const updateNP = async (type: 'charge' | 'deduct') => {
@@ -177,13 +201,13 @@ export default function AdminNPManagementPage() {
                 {logs.map((log) => (
                   <tr key={log.id} className="border-t border-zinc-800">
                     <td className="py-1">{formatDate(log.timestamp)}</td>
-                    <td>{log.fromUserId}</td>
-                    <td>{log.toUserId}</td>
+                    <td>{log.fromNickname}</td>
+                    <td>{log.toNickname}</td>
                     <td>{log.amount}</td>
                     <td>{log.context}</td>
                     <td>
                       {log.fromUserId === auth.currentUser?.uid
-                        ? '관리자 지급'
+                        ? '관리자'
                         : log.fromUserId === user?.id
                         ? '보낸 NP'
                         : '받은 NP'}
