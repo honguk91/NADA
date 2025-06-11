@@ -61,6 +61,7 @@ export default function ArtistApplicationsPage() {
 
     await setDoc(userRef, {
       isArtist: true,
+      artistLevel: "rookie",
       artistApplicationStatus: deleteField(),
     }, { merge: true });
 
