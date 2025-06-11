@@ -30,6 +30,7 @@ export default function UsersPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [filter, setFilter] = useState<'all' | 'user' | 'artist' | 'suspended'>('all');
+  const [artistLevelFilter, setArtistLevelFilter] = useState<'전체' | 'rookie' | 'amateur' | 'pro' | null>(null);
   const [search, setSearch] = useState('');
   const [openSelectUserId, setOpenSelectUserId] = useState<string | null>(null);
   const [openSuspendMenuId, setOpenSuspendMenuId] = useState<string | null>(null);
@@ -159,7 +160,13 @@ export default function UsersPage() {
     const matchesSearch =
       user.nickname?.toLowerCase().includes(search.toLowerCase()) ||
       user.email?.toLowerCase().includes(search.toLowerCase());
-    return matchesFilter && matchesSearch;
+
+     const matchesLevel =
+    artistLevelFilter === null ||
+    artistLevelFilter === '전체' ||
+    user.artistLevel === artistLevelFilter;
+
+  return matchesFilter && matchesSearch && matchesLevel;
   });
 
   if (loading) {
@@ -178,13 +185,17 @@ export default function UsersPage() {
           { label: '아티스트 유저', value: 'artist' },
           { label: '정지된 유저', value: 'suspended' },
         ].map(({ label, value }) => (
-          <button
-            key={value}
-            className={`px-4 py-2 rounded ${filter === value ? 'bg-purple-600' : 'bg-zinc-700'}`}
-            onClick={() => setFilter(value as any)}
-          >
-            {label}
-          </button>
+         <button
+  key={value}
+  className={`px-4 py-2 rounded ${filter === value ? 'bg-purple-600' : 'bg-zinc-700'}`}
+  onClick={() => {
+    setFilter(value as any);
+    if (value === 'artist') setArtistLevelFilter('전체');
+    else setArtistLevelFilter(null);
+  }}
+>
+  {label}
+</button>
         ))}
       </div>
 
@@ -196,6 +207,22 @@ export default function UsersPage() {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+
+{artistLevelFilter && (
+  <div className="flex gap-2 mb-6">
+    {['전체', 'rookie', 'amateur', 'pro'].map((level) => (
+      <button
+        key={level}
+        onClick={() => setArtistLevelFilter(level as any)}
+        className={`px-4 py-1 rounded ${
+          artistLevelFilter === level ? 'bg-purple-600' : 'bg-zinc-700'
+        }`}
+      >
+        {level === '전체' ? '전체' : level}
+      </button>
+    ))}
+  </div>
+)}
 
       {/* 유저 카드 */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
