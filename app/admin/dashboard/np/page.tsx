@@ -17,23 +17,22 @@ import {
 interface UserModel {
   id: string;
   nickname: string;
-  coinBalance: number;
+  np: number;
 }
 
-interface NPLog {
+interface TransactionLog {
   id: string;
-  userId: string;
-  nickname: string;
+  fromUserId: string;
+  toUserId: string;
   amount: number;
-  type: '충전' | '회수';
-  adminId: string;
-  createdAt: any;
+  context: string;
+  timestamp: any;
 }
 
 export default function AdminNPManagementPage() {
   const [searchText, setSearchText] = useState('');
   const [user, setUser] = useState<UserModel | null>(null);
-  const [logs, setLogs] = useState<NPLog[]>([]);
+  const [logs, setLogs] = useState<TransactionLog[]>([]);
   const [amount, setAmount] = useState<number>(0);
 
   const handleSearch = async () => {
@@ -46,7 +45,7 @@ export default function AdminNPManagementPage() {
       setUser({
         id: userDoc.id,
         nickname: userData.nickname,
-        coinBalance: userData.coinBalance || 0,
+        np: userData.np || 0,
       });
       fetchLogs(userDoc.id);
     } else {
@@ -58,12 +57,12 @@ export default function AdminNPManagementPage() {
 
   const fetchLogs = async (uid: string) => {
     const q = query(
-      collection(db, 'npLogs'),
-      where('userId', '==', uid),
-      orderBy('createdAt', 'desc')
+      collection(db, 'transactions'),
+      where('fromUserId', '==', uid),
+      orderBy('timestamp', 'desc')
     );
     const snapshot = await getDocs(q);
-    const result = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as NPLog));
+    const result = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as TransactionLog));
     setLogs(result);
   };
 
@@ -72,22 +71,21 @@ export default function AdminNPManagementPage() {
 
     const newBalance =
       type === 'charge'
-        ? user.coinBalance + amount
-        : Math.max(0, user.coinBalance - amount);
+        ? user.np + amount
+        : Math.max(0, user.np - amount);
 
     const userRef = doc(db, 'users', user.id);
-    await updateDoc(userRef, { coinBalance: newBalance });
+    await updateDoc(userRef, { np: newBalance });
 
-    await addDoc(collection(db, 'npLogs'), {
-      userId: user.id,
-      nickname: user.nickname,
+    await addDoc(collection(db, 'transactions'), {
+      fromUserId: 'ADMIN',
+      toUserId: user.id,
       amount: type === 'charge' ? amount : -amount,
-      type: type === 'charge' ? '충전' : '회수',
-      adminId: 'admin', // TODO: 실제 로그인 관리자 ID로 대체
-      createdAt: new Date(),
+      context: type === 'charge' ? '관리자 충전' : '관리자 회수',
+      timestamp: new Date(),
     });
 
-    setUser({ ...user, coinBalance: newBalance });
+    setUser({ ...user, np: newBalance });
     fetchLogs(user.id);
     setAmount(0);
   };
@@ -122,7 +120,7 @@ export default function AdminNPManagementPage() {
         {user && (
           <div className="bg-zinc-900 p-4 rounded-md space-y-2">
             <div className="text-lg font-semibold">🎧 {user.nickname}</div>
-            <div>보유 NP코인: {user.coinBalance}</div>
+            <div>보유 NP코인: {user.np}</div>
 
             <div className="flex items-center gap-3 mt-2">
               <input
@@ -154,18 +152,20 @@ export default function AdminNPManagementPage() {
               <thead>
                 <tr className="text-zinc-400 text-left">
                   <th className="pb-2">시간</th>
-                  <th className="pb-2">유형</th>
+                  <th className="pb-2">보낸 사람</th>
+                  <th className="pb-2">받는 사람</th>
                   <th className="pb-2">수량</th>
-                  <th className="pb-2">담당자</th>
+                  <th className="pb-2">사유</th>
                 </tr>
               </thead>
               <tbody>
                 {logs.map((log) => (
                   <tr key={log.id} className="border-t border-zinc-800">
-                    <td className="py-1">{formatDate(log.createdAt)}</td>
-                    <td>{log.type}</td>
+                    <td className="py-1">{formatDate(log.timestamp)}</td>
+                    <td>{log.fromUserId}</td>
+                    <td>{log.toUserId}</td>
                     <td>{log.amount}</td>
-                    <td>{log.adminId}</td>
+                    <td>{log.context}</td>
                   </tr>
                 ))}
               </tbody>
