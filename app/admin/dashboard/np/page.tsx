@@ -57,14 +57,12 @@ export default function AdminNPManagementPage() {
   const fetchLogs = async (uid: string) => {
     const fromQuery = query(
       collection(db, 'transactions'),
-      where('fromUserId', '==', uid),
-      orderBy('timestamp', 'desc')
+      where('fromUserId', '==', uid)
     );
 
     const toQuery = query(
       collection(db, 'transactions'),
-      where('toUserId', '==', uid),
-      orderBy('timestamp', 'desc')
+      where('toUserId', '==', uid)
     );
 
     const [fromSnapshot, toSnapshot] = await Promise.all([
@@ -77,7 +75,7 @@ export default function AdminNPManagementPage() {
 
     const merged = [...fromLogs, ...toLogs]
       .filter((v, i, arr) => arr.findIndex(x => x.id === v.id) === i)
-      .sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
+      .sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
 
     setLogs(merged);
   };
