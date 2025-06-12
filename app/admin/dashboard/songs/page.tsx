@@ -161,17 +161,30 @@ export default function MusicListPage() {
             )}
 
             {selectedTab === "정지된 곡" && (
-              <button
-                onClick={async () => {
-                  await approveSong(selectedSong.id);
-                  setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
-                  setSelectedSong(null);
-                }}
-                className="bg-purple-600 px-4 py-1 rounded hover:bg-purple-700"
-              >
-                되살리기
-              </button>
-            )}
+  <>
+    <button
+      onClick={async () => {
+        await approveSong(selectedSong.id);
+        setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+        setSelectedSong(null);
+      }}
+      className="bg-purple-600 px-4 py-1 rounded hover:bg-purple-700"
+    >
+      되살리기
+    </button>
+
+    <button
+      onClick={async () => {
+        await deleteSong(selectedSong.id); // soft delete
+        setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+        setSelectedSong(null);
+      }}
+      className="bg-red-700 px-4 py-1 rounded hover:bg-red-800"
+    >
+      삭제
+    </button>
+  </>
+)}
 
             {selectedTab === "삭제된 곡" && (
               <>
