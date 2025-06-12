@@ -100,7 +100,7 @@ export default function MusicListPage() {
         </select>
       </div>
 
-      {/* 오디오 플레이어 (검색 밑으로 이동) */}
+      {/* 오디오 플레이어 */}
       {selectedSong && (
         <div className="mb-6 p-4 bg-white/10 rounded-xl">
           <div className="text-xl font-bold mb-1">{selectedSong.title}</div>
@@ -109,7 +109,6 @@ export default function MusicListPage() {
           </div>
           <audio controls src={selectedSong.audioURL} className="w-full mb-4" />
 
-          {/* 관리 버튼 (플레이어 박스 안으로 이동) */}
           <div className="flex flex-wrap gap-2">
             {selectedTab === "업로드 신청곡" && (
               <>
@@ -175,23 +174,38 @@ export default function MusicListPage() {
             )}
 
             {selectedTab === "삭제된 곡" && (
-              <button
-                onClick={async () => {
-                  await restoreSong(selectedSong.id);
-                  setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
-                  setSelectedSong(null);
-                }}
-                className="bg-blue-600 px-4 py-1 rounded hover:bg-blue-700"
-              >
-                복원
-              </button>
+              <>
+                <button
+                  onClick={async () => {
+                    await restoreSong(selectedSong.id);
+                    setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+                    setSelectedSong(null);
+                  }}
+                  className="bg-blue-600 px-4 py-1 rounded hover:bg-blue-700"
+                >
+                  복원
+                </button>
+                <button
+                  onClick={async () => {
+                    const confirmed = confirm("정말로 완전히 삭제하시겠습니까?");
+                    if (!confirmed) return;
+
+                    await deleteSong(selectedSong.id, true);
+                    setSongs((prev) => prev.filter((s) => s.id !== selectedSong.id));
+                    setSelectedSong(null);
+                  }}
+                  className="bg-red-800 px-4 py-1 rounded hover:bg-red-900"
+                >
+                  완전 삭제
+                </button>
+              </>
             )}
           </div>
         </div>
       )}
 
       {/* 카드 리스트 */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {filteredSongs.map((song) => (
           <div
             key={song.id}
@@ -203,16 +217,16 @@ export default function MusicListPage() {
             <img
               src={song.imageURL || "/default-thumbnail.png"}
               alt="썸네일"
-              className="w-full h-40 object-cover"
+              className="w-full h-32 object-cover"
             />
-             <div className="p-4">
-              <div className="text-lg font-semibold">
+            <div className="p-3">
+              <div className="text-sm font-semibold truncate">
                 {song.title}
                 {typeof song.likeCount === "number" && (
-                  <span className="ml-2 text-sm text-purple-400">❤️ {song.likeCount}</span>
+                  <span className="ml-1 text-xs text-purple-400">❤️ {song.likeCount}</span>
                 )}
               </div>
-              <div className="text-sm text-gray-400">
+              <div className="text-xs text-gray-400 truncate">
                 {song.nickname} · {song.genre}
               </div>
             </div>
@@ -222,4 +236,3 @@ export default function MusicListPage() {
     </div>
   );
 }
-

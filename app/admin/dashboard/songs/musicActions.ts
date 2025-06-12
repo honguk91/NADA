@@ -3,6 +3,7 @@ import {
   collection,
   getDocs,
   updateDoc,
+  deleteDoc,
   doc,
   query,
   where,
@@ -87,12 +88,21 @@ export async function pauseSong(id: string) {
   });
 }
 
-export async function deleteSong(id: string) {
-  await updateDoc(doc(db, "songs", id), {
-    isDeleted: true,
-    isVisible: false,
-  });
+export async function deleteSong(id: string, hardDelete = false) {
+  const songRef = doc(db, "songs", id);
+
+  if (hardDelete) {
+    // 완전 삭제 (문서 자체를 삭제)
+    await deleteDoc(songRef);
+  } else {
+    // 일반 삭제 처리 (isDeleted 표시)
+    await updateDoc(songRef, {
+      isDeleted: true,
+      isVisible: false,
+    });
+  }
 }
+
 
 export async function restoreSong(id: string) {
   await updateDoc(doc(db, "songs", id), {
