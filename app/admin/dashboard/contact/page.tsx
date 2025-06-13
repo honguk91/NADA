@@ -60,8 +60,7 @@ export default function AdminContactListView() {
         }) as ContactMessage[];
 
       const inboxQ = query(collection(db, "contactMessages"), orderBy("createdAt", "desc"));
-      const inboxSnap = await getDocs(inboxQ);
-      setMessages(normalize(inboxSnap));
+   
 
       const answeredQ = query(collection(db, "answeredMessages"), orderBy("createdAt", "desc"));
       const answeredSnap = await getDocs(answeredQ);
