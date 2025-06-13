@@ -208,16 +208,20 @@ export default function MusicListPage() {
             {/* 삭제된 곡 탭 */}
             {selectedTab === "삭제된 곡" && (
               <>
-                <button
-                  className="bg-blue-600 px-4 py-1 rounded hover:bg-blue-700"
-                  onClick={async () => {
-                    if (!selectedSong) return;
-await deleteSong(selectedSong.id, selectedSong.title, selectedSong.userId, true);
-                    setSelectedSong(null);
-                  }}
-                >
-                  복원
-                </button>
+            <button
+  className="bg-blue-600 px-4 py-1 rounded hover:bg-blue-700"
+  onClick={async () => {
+    if (!selectedSong) return;
+    await restoreSong(
+      selectedSong.id,
+      selectedSong.title,
+      selectedSong.userId
+    );
+    refreshAfterAction(selectedSong.id);
+  }}
+>
+  복원
+</button>
 
                 <button
                   className="bg-red-800 px-4 py-1 rounded hover:bg-red-900"
