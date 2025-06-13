@@ -73,10 +73,16 @@ export default function AdminContactListView() {
   };
 
   const handleMarkAsAnswered = async (msg: ContactMessage) => {
-    await setDoc(doc(db, "answeredMessages", msg.id), msg);
-    await deleteDoc(doc(db, "contactMessages", msg.id));
-    setMessages((prev) => prev.filter((m) => m.id !== msg.id));
-    setAnsweredMessages((prev) => [msg, ...prev]);
+    try {
+      await setDoc(doc(db, "answeredMessages", msg.id), msg);
+      await deleteDoc(doc(db, "contactMessages", msg.id));
+      setMessages((prev) => prev.filter((m) => m.id !== msg.id));
+      setAnsweredMessages((prev) => [msg, ...prev]);
+      alert(`문의 내용은 ${msg.email}로 발송되었습니다.`);
+    } catch (error) {
+      console.error("완료 처리 실패:", error);
+      alert("완료 처리 중 오류가 발생했습니다.");
+    }
   };
 
   const currentMessages = view === "inbox" ? messages : answeredMessages;
@@ -113,18 +119,18 @@ export default function AdminContactListView() {
               <p><span className="font-semibold">문의:</span> {msg.message}</p>
               <p><span className="font-semibold">작성일:</span> {msg.createdAt.toLocaleString()}</p>
             </div>
-            <div className="flex justify-end gap-2 mt-4">
+            <div className="flex justify-end gap-4 mt-4">
               {view === "inbox" && (
                 <button
                   onClick={() => handleMarkAsAnswered(msg)}
-                  className="text-xs text-green-400 hover:underline"
+                  className="px-3 py-2 bg-green-600 rounded text-white text-sm hover:bg-green-500"
                 >
                   완료
                 </button>
               )}
               <button
                 onClick={() => handleDelete(msg.id, view === "answered")}
-                className="text-xs text-red-400 hover:underline"
+                className="px-3 py-2 bg-red-600 rounded text-white text-sm hover:bg-red-500"
               >
                 삭제
               </button>
