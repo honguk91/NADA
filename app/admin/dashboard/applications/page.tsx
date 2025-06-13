@@ -56,6 +56,15 @@ export default function ArtistApplicationsPage() {
     fetchApplications();
   }, []);
 
+const sendNotification = async (userId: string, message: string) => {
+  const notiRef = doc(collection(db, "users", userId, "notifications"));
+  await setDoc(notiRef, {
+    message,
+    createdAt: Timestamp.now()
+  });
+};
+
+
   const approve = async (app: Application) => {
     const userRef = doc(db, "users", app.userId);
 
@@ -66,6 +75,8 @@ export default function ArtistApplicationsPage() {
     }, { merge: true });
 
     await deleteDoc(doc(db, "artistApplications", app.id));
+
+    await sendNotification(app.userId, "🎉 아티스트 신청이 승인되었습니다!");
 
     if (app.musicURLs?.length) {
       for (const url of app.musicURLs) {
@@ -100,6 +111,8 @@ export default function ArtistApplicationsPage() {
     }, { merge: true });
 
     await deleteDoc(doc(db, "artistApplications", app.id));
+
+    await sendNotification(app.userId, "😢 아티스트 신청이 거절되었습니다.");
 
     if (app.musicURLs?.length) {
       for (const url of app.musicURLs) {
