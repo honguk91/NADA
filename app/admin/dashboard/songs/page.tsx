@@ -153,11 +153,10 @@ export default function MusicListPage() {
                 </button>
               </>
             )}
-
 {selectedTab === "업로드 된 곡" && (
   <>
     <button
-      className="bg-yellow-600 px-4 py-1 rounded hover:bg-yellow-700"
+      className="bg-yellow-600 text-white px-4 py-1 rounded shadow-md hover:bg-yellow-700 transition"
       onClick={async () => {
         if (!selectedSong) return;
         await pauseSong(selectedSong.id, selectedSong.title, selectedSong.userId);
@@ -168,7 +167,7 @@ export default function MusicListPage() {
     </button>
 
     <button
-      className="bg-red-700 px-4 py-1 rounded hover:bg-red-800"
+      className="bg-red-700 text-white px-4 py-1 rounded shadow-md hover:bg-red-800 transition"
       onClick={async () => {
         if (!selectedSong) return;
         await deleteSong(selectedSong.id, selectedSong.title, selectedSong.userId);
@@ -179,7 +178,6 @@ export default function MusicListPage() {
     </button>
   </>
 )}
-
 
             {/* 정지된 곡 탭 */}
             {selectedTab === "정지된 곡" && (
