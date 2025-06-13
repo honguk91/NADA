@@ -154,30 +154,32 @@ export default function MusicListPage() {
               </>
             )}
 
-            {/* 업로드 된 곡 탭 */}
-            {selectedTab === "업로드 된 곡" && (
-              <>
-            <button
-  onClick={async () => {
-    if (!selectedSong) return;
-    await pauseSong(selectedSong.id, selectedSong.title, selectedSong.userId);
-    refreshAfterAction(selectedSong.id);
-  }}
->
-  정지
-</button>
+{selectedTab === "업로드 된 곡" && (
+  <>
+    <button
+      className="bg-yellow-600 px-4 py-1 rounded hover:bg-yellow-700"
+      onClick={async () => {
+        if (!selectedSong) return;
+        await pauseSong(selectedSong.id, selectedSong.title, selectedSong.userId);
+        refreshAfterAction(selectedSong.id);
+      }}
+    >
+      정지
+    </button>
 
-<button
-  onClick={async () => {
-    if (!selectedSong) return;
-    await deleteSong(selectedSong.id, selectedSong.title, selectedSong.userId);
-    refreshAfterAction(selectedSong.id);
-  }}
->
-  삭제
-</button>
-              </>
-            )}
+    <button
+      className="bg-red-700 px-4 py-1 rounded hover:bg-red-800"
+      onClick={async () => {
+        if (!selectedSong) return;
+        await deleteSong(selectedSong.id, selectedSong.title, selectedSong.userId);
+        refreshAfterAction(selectedSong.id);
+      }}
+    >
+      삭제
+    </button>
+  </>
+)}
+
 
             {/* 정지된 곡 탭 */}
             {selectedTab === "정지된 곡" && (

@@ -112,7 +112,7 @@ export async function deleteSong(
       isDeleted: true,
       isVisible: false,
     });
-    await sendNotification(userId, `🗑️ '${title}' 가 삭제되었습니다.`);
+    await sendNotification(userId, `✅ '${title}' 업로드가 복원되었습니다.`);
   }
 }
 
