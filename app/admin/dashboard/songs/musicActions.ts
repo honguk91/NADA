@@ -9,6 +9,8 @@ import {
   where,
   orderBy,
 } from "firebase/firestore";
+import { sendNotification } from "@/lib/notifications";
+
 
 interface Song {
   id: string;
@@ -20,6 +22,7 @@ interface Song {
   isPending: boolean;
   isVisible: boolean;
   isDeleted: boolean;
+  userId: string; 
 }
 
 export async function fetchSongsByStatus(
@@ -66,48 +69,63 @@ export async function fetchSongsByStatus(
   })) as Song[];
 }
 
-export async function approveSong(id: string) {
+export async function approveSong(id: string, title: string, userId: string) {
   await updateDoc(doc(db, "songs", id), {
     isPending: false,
     isVisible: true,
     isDeleted: false,
   });
+  await sendNotification(userId, `🎵 '${title}' 업로드가 승인되었습니다!`);
 }
 
-export async function rejectSong(id: string) {
+export async function rejectSong(id: string, title: string, userId: string) {
   await updateDoc(doc(db, "songs", id), {
     isPending: false,
     isVisible: false,
     isDeleted: true,
   });
+  await sendNotification(userId, `❌ '${title}' 업로드가 반려되었습니다.`);
 }
 
-export async function pauseSong(id: string) {
+export async function pauseSong(id: string, title: string, userId: string) {
   await updateDoc(doc(db, "songs", id), {
     isVisible: false,
   });
+
+  await sendNotification(userId, `⏸️ '${title}' 가 정지되었습니다.`);
 }
 
-export async function deleteSong(id: string, hardDelete = false) {
+
+export async function deleteSong(
+  id: string,
+  title: string,
+  userId: string,
+  hardDelete = false
+) {
   const songRef = doc(db, "songs", id);
 
   if (hardDelete) {
-    // 완전 삭제 (문서 자체를 삭제)
     await deleteDoc(songRef);
+    await sendNotification(userId, `❌ '${title}' 가 완전히 삭제되었습니다.`);
   } else {
-    // 일반 삭제 처리 (isDeleted 표시)
     await updateDoc(songRef, {
       isDeleted: true,
       isVisible: false,
     });
+    await sendNotification(userId, `🗑️ '${title}' 가 삭제되었습니다.`);
   }
 }
 
 
-export async function restoreSong(id: string) {
+
+export async function restoreSong(id: string, title: string, userId: string) {
   await updateDoc(doc(db, "songs", id), {
     isDeleted: false,
     isVisible: true,
     isPending: false,
   });
+
+  await sendNotification(userId, `🎵 '${title}' 가 복원되었습니다.`);
 }
+
+
