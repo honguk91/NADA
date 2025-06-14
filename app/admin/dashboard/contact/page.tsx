@@ -77,21 +77,23 @@ export default function AdminContactListView() {
 
 const handleMarkAsAnswered = async (msg: ContactMessage) => {
   try {
-    // 🔹 answeredMessages에 이동
+    // answeredMessages에 이동
     await setDoc(doc(db, "answeredMessages", msg.id), {
       ...msg,
-      createdAt: Timestamp.fromDate(new Date(msg.createdAt)), // 타입 보정
+      createdAt: Timestamp.fromDate(new Date(msg.createdAt)),
     });
     await deleteDoc(doc(db, "contactMessages", msg.id));
 
-    // 🔹 Notification 생성
-    await addDoc(collection(db, "notifications"), {
-      userId: msg.userId,
-      title: "문의 완료",
-      message: `문의 내용이 이메일(${msg.email})로 회신되었습니다.`,
-      createdAt: Timestamp.now(),
-      isRead: false
-    });
+    // 🔥 Notification 하위 컬렉션에 저장
+    await addDoc(
+      collection(db, "users", msg.userId, "notifications"),
+      {
+        title: "문의 완료",
+        message: `문의 내용이 이메일(${msg.email})로 회신되었습니다.`,
+        createdAt: Timestamp.now(),
+        isRead: false
+      }
+    );
 
     // UI 업데이트
     setMessages((prev) => prev.filter((m) => m.id !== msg.id));
