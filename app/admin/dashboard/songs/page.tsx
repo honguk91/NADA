@@ -78,6 +78,12 @@ export default function MusicListPage() {
     setSelectedSong(null);
   };
 
+  const songCounts = {
+    "업로드 신청곡": songs.filter((s) => s.isPending && !s.isDeleted).length,
+    "업로드 된 곡": songs.filter((s) => s.isVisible && !s.isDeleted).length,
+    "정지된 곡": songs.filter((s) => !s.isVisible && !s.isPending && !s.isDeleted).length,
+    "삭제된 곡": songs.filter((s) => s.isDeleted).length,
+  };
   /* ───────────────────────────────── JSX ───────────────────────────────── */
   return (
     <div className="p-6 bg-black min-h-screen text-white">

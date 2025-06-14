@@ -228,17 +228,25 @@ export default function UsersPage() {
 
 {artistLevelFilter && (
   <div className="flex gap-2 mb-6">
-    {['전체', 'rookie', 'amateur', 'pro'].map((level) => (
-      <button
-        key={level}
-        onClick={() => setArtistLevelFilter(level as any)}
-        className={`px-4 py-1 rounded ${
-          artistLevelFilter === level ? 'bg-purple-600' : 'bg-zinc-700'
-        }`}
-      >
-        {level === '전체' ? '전체' : level}
-      </button>
-    ))}
+   {['전체', 'rookie', 'amateur', 'pro'].map((level) => {
+  const count =
+    level === '전체'
+      ? users.filter((u) => u.isArtist).length
+      : users.filter((u) => u.isArtist && u.artistLevel === level).length;
+
+  return (
+    <button
+      key={level}
+      onClick={() => setArtistLevelFilter(level as any)}
+      className={`px-4 py-1 rounded ${
+        artistLevelFilter === level ? 'bg-purple-600' : 'bg-zinc-700'
+      }`}
+    >
+      {level === '전체' ? `전체 (${count})` : `${level} (${count})`}
+    </button>
+  );
+})}
+
   </div>
 )}
 
