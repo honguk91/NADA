@@ -91,17 +91,19 @@ export default function MusicListPage() {
 
       {/* 탭 버튼 */}
       <div className="flex gap-4 mb-6 flex-wrap">
-        {Object.keys(statusMap).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setSelectedTab(tab as TabKey)}
-            className={`px-4 py-2 rounded-md text-sm font-semibold ${
-              selectedTab === tab ? "bg-purple-600" : "bg-zinc-700 hover:bg-zinc-600"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
+      {Object.keys(statusMap).map((tab) => (
+  <button
+    key={tab}
+    onClick={() => setSelectedTab(tab as TabKey)}
+    className={`px-4 py-2 rounded-md text-sm font-semibold ${
+      selectedTab === tab ? "bg-purple-600" : "bg-zinc-700 hover:bg-zinc-600"
+    }`}
+  >
+    {tab} <span className="text-purple-300">({songCounts[tab as TabKey]})</span>
+
+  </button>
+))}
+
       </div>
 
       {/* 검색 + 장르 필터 */}
