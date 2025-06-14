@@ -165,6 +165,10 @@ export default function UsersPage() {
       console.error('정지 해제 실패:', error);
     }
   };
+  const allCount = users.length;
+  const userCount = users.filter((u) => !u.isArtist).length;
+  const artistCount = users.filter((u) => u.isArtist).length;
+  const suspendedCount = users.filter((u) => u.suspendedUntil || u.isPermanentlyBanned).length;
 
   const filteredUsers = users.filter((user) => {
     const matchesFilter =
@@ -193,12 +197,11 @@ export default function UsersPage() {
       <h1 className="text-2xl font-bold mb-6">🧑‍💼 사용자 관리</h1>
 
       {/* 필터 */}
-      <div className="flex gap-4 mb-6">
-        {[
-          { label: '전체', value: 'all' },
-          { label: '일반 유저', value: 'user' },
-          { label: '아티스트 유저', value: 'artist' },
-          { label: '정지된 유저', value: 'suspended' },
+   <div className="flex gap-4 mb-6">
+        {[{ label: `전체 (${allCount})`, value: 'all' },
+          { label: `일반 유저 (${userCount})`, value: 'user' },
+          { label: `아티스트 유저 (${artistCount})`, value: 'artist' },
+          { label: `정지된 유저 (${suspendedCount})`, value: 'suspended' },
         ].map(({ label, value }) => (
          <button
   key={value}
