@@ -72,10 +72,24 @@ export default function UsersPage() {
   }, []);
 
   const getUserStatus = (user: User) => {
-    if (user.isPermanentlyBanned) return '❌ 영구정지';
-    if (user.suspendedUntil) return '⏸️ 정지상태';
-    return '✅ 정상';
-  };
+  if (user.isPermanentlyBanned) return '❌ 영구정지';
+
+  if (user.suspendedUntil) {
+    const now = new Date();
+    const suspendedUntilDate = new Date(user.suspendedUntil);
+
+    // 🔸 정지 기간이 아직 남아있으면 정지중
+    if (now < suspendedUntilDate) {
+      return '⏸️ 정지상태';
+    } else {
+      // 🔸 시간이 지났으면 만료됨
+      return '🟡 정지 만료';
+    }
+  }
+
+  return '✅ 정상';
+};
+
 
   const handleLevelChange = async (userId: string, newLevel: 'rookie' | 'amateur' | 'pro') => {
     try {
