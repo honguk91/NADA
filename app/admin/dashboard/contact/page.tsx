@@ -8,9 +8,10 @@ import {
   deleteDoc,
   setDoc,
   doc,
-  Timestamp,
+  addDoc,
   query,
   orderBy,
+  Timestamp
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -20,6 +21,7 @@ interface ContactMessage {
   email: string;
   message: string;
   createdAt: Date;
+   userId: string; 
 }
 
 export default function AdminContactListView() {
@@ -72,18 +74,33 @@ export default function AdminContactListView() {
     }
   };
 
-  const handleMarkAsAnswered = async (msg: ContactMessage) => {
-    try {
-      await setDoc(doc(db, "answeredMessages", msg.id), msg);
-      await deleteDoc(doc(db, "contactMessages", msg.id));
-      setMessages((prev) => prev.filter((m) => m.id !== msg.id));
-      setAnsweredMessages((prev) => [msg, ...prev]);
-      alert(`문의 내용은 ${msg.email}로 발송되었습니다.`);
-    } catch (error) {
-      console.error("완료 처리 실패:", error);
-      alert("완료 처리 중 오류가 발생했습니다.");
-    }
-  };
+
+const handleMarkAsAnswered = async (msg: ContactMessage) => {
+  try {
+    // 🔹 answeredMessages에 이동
+    await setDoc(doc(db, "answeredMessages", msg.id), {
+      ...msg,
+      createdAt: Timestamp.fromDate(new Date(msg.createdAt)), // 타입 보정
+    });
+    await deleteDoc(doc(db, "contactMessages", msg.id));
+
+    // 🔹 Notification 생성
+    await addDoc(collection(db, "notifications"), {
+      userId: msg.userId,
+      title: "문의 완료",
+      message: `문의 내용이 이메일(${msg.email})로 회신되었습니다.`,
+      createdAt: Timestamp.now(),
+      isRead: false
+    });
+
+    // UI 업데이트
+    setMessages((prev) => prev.filter((m) => m.id !== msg.id));
+    setAnsweredMessages((prev) => [msg, ...prev]);
+  } catch (error) {
+    console.error("완료 처리 실패:", error);
+  }
+};
+
 
   const currentMessages = view === "inbox" ? messages : answeredMessages;
 
