@@ -141,6 +141,45 @@ export default function UsersPage() {
       console.error('정지 실패:', error);
     }
   };
+const handlePromoteToAdmin = async (user: User) => {
+  const code = prompt("관리자 인증번호를 입력하세요");
+
+  if (code !== "0626") {
+    alert("❌ 인증번호가 일치하지 않습니다.");
+    return;
+  }
+
+  try {
+    await updateDoc(doc(db, "users", user.id), { isAdmin: true });
+    setUsers((prev) =>
+      prev.map((u) => (u.id === user.id ? { ...u, isAdmin: true } : u))
+    );
+    alert("✅ 관리자 권한이 부여되었습니다.");
+  } catch (err) {
+    console.error("관리자 권한 변경 실패:", err);
+    alert("오류가 발생했습니다.");
+  }
+};
+
+const handleDemoteFromAdmin = async (user: User) => {
+  const code = prompt("관리자 해제 인증번호를 입력하세요");
+
+  if (code !== "0626") {
+    alert("❌ 인증번호가 일치하지 않습니다.");
+    return;
+  }
+
+  try {
+    await updateDoc(doc(db, "users", user.id), { isAdmin: false });
+    setUsers((prev) =>
+      prev.map((u) => (u.id === user.id ? { ...u, isAdmin: false } : u))
+    );
+    alert("✅ 관리자 권한이 해제되었습니다.");
+  } catch (err) {
+    console.error("관리자 해제 실패:", err);
+    alert("오류가 발생했습니다.");
+  }
+};
 
   const handleUnsuspend = async (user: User) => {
     try {
@@ -278,31 +317,50 @@ export default function UsersPage() {
               <p className="text-sm text-zinc-400">정지 횟수: {user.suspensionCount || 0}</p>
 
               {/* 등급 변경 */}
-              {user.isArtist && (
-                <div className="mt-2">
-                  <button
-                    className="text-sm underline text-purple-400"
-                    onClick={() =>
-                      setOpenSelectUserId((prev) => (prev === user.id ? null : user.id))
-                    }
-                  >
-                    등급 변경
-                  </button>
-                  {openSelectUserId === user.id && (
-                    <div className="mt-2 space-y-1">
-                      {['rookie', 'amateur', 'pro'].map((level) => (
-                        <button
-                          key={level}
-                          onClick={() => handleLevelChange(user.id, level as any)}
-                          className="block w-full text-left text-sm px-2 py-1 rounded hover:bg-zinc-700"
-                        >
-                          {level}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+             {user.isArtist && (
+  <div className="mt-2 flex gap-3 items-center">
+    <button
+      className="text-sm underline text-purple-400"
+      onClick={() =>
+        setOpenSelectUserId((prev) => (prev === user.id ? null : user.id))
+      }
+    >
+      등급 변경
+    </button>
+
+    {/* ✅ 관리자 지정/해제 버튼 */}
+    {user.isAdmin ? (
+      <button
+        className="text-sm text-red-400 underline"
+        onClick={() => handleDemoteFromAdmin(user)}
+      >
+        관리자 해제
+      </button>
+    ) : (
+      <button
+        className="text-sm text-yellow-400 underline"
+        onClick={() => handlePromoteToAdmin(user)}
+      >
+        관리자 지정
+      </button>
+    )}
+
+    {openSelectUserId === user.id && (
+      <div className="mt-2 space-y-1">
+        {['rookie', 'amateur', 'pro'].map((level) => (
+          <button
+            key={level}
+            onClick={() => handleLevelChange(user.id, level as any)}
+            className="block w-full text-left text-sm px-2 py-1 rounded hover:bg-zinc-700"
+          >
+            {level}
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
 
               {/* 정지 및 해제 버튼 */}
               <div className="mt-4 space-y-1">
