@@ -217,6 +217,7 @@ const handleDemoteFromAdmin = async (user: User) => {
       (filter === 'user' && !user.isArtist) ||
       (filter === 'suspended' && (user.suspendedUntil || user.isPermanentlyBanned));
     const matchesSearch =
+    search.trim() === '' 
       user.nickname?.toLowerCase().includes(search.toLowerCase()) ||
       user.email?.toLowerCase().includes(search.toLowerCase());
 
