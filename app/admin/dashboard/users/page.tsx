@@ -65,26 +65,12 @@ useEffect(() => {
       ...doc.data(),
     })) as User[];
 
-    // 🔥 팬 수 포함
-    const listWithFanCounts = await Promise.all(
-      list.map(async (user) => {
-        if (user.isArtist) {
-          const fansSnap = await getDocs(collection(db, `users/${user.id}/fans`));
-          return {
-            ...user,
-            fanCount: fansSnap.size,
-          };
-        } else {
-          return user;
-        }
-      })
-    );
-
-    setUsers(listWithFanCounts);
+    setUsers(list); // fanCount도 포함되어 있음
   };
 
   fetchUsers(); // 비동기 함수 호출
 }, []);
+
 
 
   const getUserStatus = (user: User) => {
