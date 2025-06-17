@@ -90,6 +90,30 @@ export default function UsersPage() {
   return '✅ 정상';
 };
 
+const fetchUsers = async () => {
+  const snapshot = await getDocs(collection(db, 'users'));
+  const list = snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as User[];
+
+  // 각 아티스트에 대해 팬 수 불러오기
+  const listWithFanCounts = await Promise.all(
+    list.map(async (user) => {
+      if (user.isArtist) {
+        const fansSnap = await getDocs(collection(db, `users/${user.id}/fans`));
+        return {
+          ...user,
+          fanCount: fansSnap.size,
+        };
+      } else {
+        return user;
+      }
+    })
+  );
+
+  setUsers(listWithFanCounts);
+};
 
   const handleLevelChange = async (userId: string, newLevel: 'rookie' | 'amateur' | 'pro') => {
     try {
