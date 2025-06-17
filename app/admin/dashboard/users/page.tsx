@@ -91,6 +91,30 @@ useEffect(() => {
 
   return '✅ 정상';
 };
+// 1️⃣ 컴포넌트 최상단 함수들 옆에 추가
+const handleEditFanCount = async (user: User) => {
+  const input = prompt(
+    `${user.nickname || user.email}님의 팬 수를 입력하세요`,
+    (user.fanCount ?? 0).toString()
+  );
+  if (input === null) return; // 취소
+  const newCount = Number(input);
+  if (Number.isNaN(newCount) || newCount < 0) {
+    alert('숫자를 올바르게 입력하세요');
+    return;
+  }
+
+  try {
+    await updateDoc(doc(db, 'users', user.id), { fanCount: newCount });
+    setUsers(prev =>
+      prev.map(u => (u.id === user.id ? { ...u, fanCount: newCount } : u))
+    );
+    alert('✅ 팬 수가 변경되었습니다');
+  } catch (err) {
+    console.error('fanCount 업데이트 실패:', err);
+    alert('❌ 변경 실패');
+  }
+};
 
   const handleLevelChange = async (userId: string, newLevel: 'rookie' | 'amateur' | 'pro') => {
     try {
@@ -300,12 +324,26 @@ const handleDemoteFromAdmin = async (user: User) => {
               key={user.id}
               className="border border-zinc-700 rounded p-4 bg-zinc-900 relative"
             >
-              <p className="text-lg font-semibold">
-              {user.nickname || '닉네임 없음'}
-              {user.isArtist && user.fanCount !== undefined && (
-            <span className="ml-2 text-sm text-zinc-400">👥 팬 {user.fanCount}명</span>
-  )}
-</p>
+ {/* 닉네임 + 팬 수 + ✏️ */}
+        <p className="text-lg font-semibold flex items-center gap-1">
+          {user.nickname || '닉네임 없음'}
+          {user.isArtist && (
+            <>
+              <span className="text-sm text-zinc-400">
+                👥 팬 {user.fanCount ?? 0}명
+              </span>
+              {isAdmin && (
+                <button
+                  onClick={() => handleEditFanCount(user)}
+                  className="text-xs text-purple-400 hover:text-purple-300"
+                  title="팬 수 수정"
+                >
+                  ✏️
+                </button>
+              )}
+            </>
+          )}
+        </p>
               <p className="text-sm text-zinc-400">{user.email}</p>
               <p className="text-sm mt-1">
                 유형:{' '}
