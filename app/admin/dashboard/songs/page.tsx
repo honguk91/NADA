@@ -19,7 +19,11 @@ interface Song {
   nickname: string;
   userId: string;
   audioURL: string;
-  imageURL: string;
+  imageURLs?: {
+    small?: string;
+    medium?: string;
+    large?: string;
+  };
   genre?: string;
   isPending: boolean;
   isVisible: boolean;
@@ -230,11 +234,12 @@ export default function MusicListPage() {
               selectedSong?.id === song.id ? "border-purple-500" : "border-transparent"
             }`}
           >
-            <img
-              src={song.imageURL || "/default-thumbnail.png"}
-              alt="썸네일"
-              className="w-full h-32 object-cover"
-            />
+          <img
+  src={song.imageURLs?.small || "/default-thumbnail.png"}
+  alt="썸네일"
+  className="w-full h-32 object-cover"
+/>
+
             <div className="p-3">
               <div className="text-sm font-semibold truncate flex items-center">
                 {song.title}
