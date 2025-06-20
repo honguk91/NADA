@@ -44,6 +44,21 @@ const genreList = [
   "전체", "발라드", "힙합", "댄스", "인디", "락", "트로트", "국악",
 ];
 
+// 프록시 URL 생성 함수
+const getProxyURL = (audioURL: string): string => {
+  try {
+    const url = new URL(audioURL);
+    const objectPathEncoded = url.pathname.split("/o/")[1];
+    if (!objectPathEncoded) return audioURL;
+
+    const objectPath = decodeURIComponent(objectPathEncoded);
+
+    return `https://cdnhandler-u5ungghf3a-du.a.run.app/${objectPath}`;
+  } catch {
+    return audioURL;
+  }
+};
+
 export default function MusicListPage() {
   const [selectedTab, setSelectedTab] = useState<TabKey>("업로드 신청곡");
   const [songs, setSongs] = useState<Song[]>([]);
@@ -54,7 +69,6 @@ export default function MusicListPage() {
   const [editingLikeId, setEditingLikeId] = useState<string | null>(null);
   const [likeEditValue, setLikeEditValue] = useState<number | null>(null);
 
-  // ✅ 관리자 여부 (임시로 true 설정, 실제 로그인 상태에 따라 변경 필요)
   const isAdmin = true;
 
   useEffect(() => {
@@ -134,7 +148,13 @@ export default function MusicListPage() {
           <div className="text-sm text-gray-400 mb-2">
             {selectedSong.nickname} · {selectedSong.genre}
           </div>
-          <audio controls src={selectedSong.audioURL} className="w-full mb-4" />
+          <audio
+            key={selectedSong.id}
+            controls
+            preload="auto"
+            src={getProxyURL(selectedSong.audioURL)}
+            className="w-full mb-4"
+          />
 
           <div className="flex flex-wrap gap-2">
             {selectedTab === "업로드 신청곡" && (
@@ -234,11 +254,11 @@ export default function MusicListPage() {
               selectedSong?.id === song.id ? "border-purple-500" : "border-transparent"
             }`}
           >
-          <img
-  src={song.imageURLs?.small || "/default-thumbnail.png"}
-  alt="썸네일"
-  className="w-full h-32 object-cover"
-/>
+            <img
+              src={song.imageURLs?.small || "/default-thumbnail.png"}
+              alt="썸네일"
+              className="w-full h-32 object-cover"
+            />
 
             <div className="p-3">
               <div className="text-sm font-semibold truncate flex items-center">
