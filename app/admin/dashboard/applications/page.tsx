@@ -168,6 +168,20 @@ export default function ArtistApplicationsPage() {
     setApplications((prev) => prev.filter((a) => a.id !== app.id));
   };
 
+  const deleteApplication = async (app: Application) => {
+    const collectionName = tab === "pending" ? "artistApplications" : "rejectedArtistApplications";
+    await deleteDoc(doc(db, collectionName, app.id));
+
+    if (app.musicURLs?.length) {
+      for (const url of app.musicURLs) {
+        const path = getStoragePathFromURL(url);
+        if (path) await deleteObject(ref(storage, path)).catch(() => {});
+      }
+    }
+
+    setApplications((prev) => prev.filter((a) => a.id !== app.id));
+  };
+
   return (
     <div className="min-h-screen bg-black text-white p-8">
       <div className="flex gap-4 mb-6 relative">
@@ -236,11 +250,17 @@ export default function ArtistApplicationsPage() {
                   >
                     거절
                   </button>
+                  <button
+                    onClick={() => deleteApplication(app)}
+                    className="bg-zinc-600 hover:bg-zinc-700 px-4 py-2 rounded-md"
+                  >
+                    삭제
+                  </button>
                 </div>
               )}
 
               {tab === "rejected" && (
-                <div className="mt-4 text-right">
+                <div className="mt-4 flex justify-between items-center">
                   {(() => {
                     const canReapplyTime = app.canReapplyAfter?.toDate();
                     return canReapplyTime && canReapplyTime <= new Date();
@@ -253,9 +273,18 @@ export default function ArtistApplicationsPage() {
                     </button>
                   ) : (
                     <p className="text-sm text-gray-400">
-                      ⏳ 재신청까지 남은 시간: {format(app.canReapplyAfter?.toDate() || new Date(), "MM/dd HH:mm", { locale: ko })}
+                      ⏳ 재신청까지 남은 시간:{" "}
+                      {format(app.canReapplyAfter?.toDate() || new Date(), "MM/dd HH:mm", {
+                        locale: ko,
+                      })}
                     </p>
                   )}
+                  <button
+                    onClick={() => deleteApplication(app)}
+                    className="bg-zinc-600 hover:bg-zinc-700 px-4 py-1 rounded-md text-sm"
+                  >
+                    삭제
+                  </button>
                 </div>
               )}
             </div>
