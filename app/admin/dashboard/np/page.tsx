@@ -29,6 +29,7 @@ interface TransactionLog {
   timestamp: any;
   fromNickname?: string;
   toNickname?: string;
+   balanceAfter?: number;
 }
 
 export default function AdminNPManagementPage() {
@@ -99,6 +100,26 @@ export default function AdminNPManagementPage() {
   })
 );
 
+// ⬇️ 거래 로그를 오래된 순서로 정렬 (잔액 누적 계산을 위해)
+const chronological = [...enrichedLogs].sort(
+  (a, b) => a.timestamp?.seconds - b.timestamp?.seconds
+);
+
+// ⬇️ 사용자 NP의 현재 값에서 과거로 되돌아가며 잔액 계산
+let runningBalance = user?.np ?? 0;
+
+for (let i = chronological.length - 1; i >= 0; i--) {
+  const log = chronological[i];
+
+  if (log.toUserId === user?.id) {
+    runningBalance -= log.amount;
+  } else if (log.fromUserId === user?.id) {
+    runningBalance += log.amount;
+  }
+
+  // 계산된 잔액을 해당 로그에 추가
+  log['balanceAfter'] = runningBalance;
+}
 
 
     setLogs(enrichedLogs);
@@ -195,6 +216,8 @@ export default function AdminNPManagementPage() {
                   <th className="pb-2">수량</th>
                   <th className="pb-2">사유</th>
                   <th className="pb-2">유형</th>
+                  <th className="pb-2">잔액</th>
+
                 </tr>
               </thead>
               <tbody>
@@ -205,6 +228,7 @@ export default function AdminNPManagementPage() {
                     <td>{log.toNickname}</td>
                     <td>{log.amount}</td>
                     <td>{log.context}</td>
+
                     <td>
                       {log.fromUserId === auth.currentUser?.uid
                         ? '관리자'
@@ -212,6 +236,7 @@ export default function AdminNPManagementPage() {
                         ? '보낸 NP'
                         : '받은 NP'}
                     </td>
+                      <td>{log.balanceAfter ?? '-'}</td>
                   </tr>
                 ))}
               </tbody>
