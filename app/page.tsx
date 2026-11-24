@@ -211,22 +211,33 @@ export default function HomePage() {
 
         {/* 48-BAR AUDIO EQUALIZER */}
 
-        <div className="nt-wave nt-equalizer">
-          <div className="nt-wave-bars nt-equalizer-bars">
-            {Array.from({ length: 48 }).map((_, i) => (
-              <span
-                key={i}
-                style={{
-                  '--height': `${20 + Math.abs(Math.sin(i * 0.45)) * 90}px`,
-                  '--delay': `${i * 0.045}s`,
-                  '--duration': `${0.55 + (i % 7) * 0.13}s`,
-                } as CSSProperties}
-              />
-            ))}
-          </div>
+       
+<div className="nt-wave nt-equalizer">
+  <div className="nt-wave-bars nt-equalizer-bars">
+    {Array.from({ length: 48 }).map((_, i) => {
+      const height = Math.round(
+        20 + Math.abs(Math.sin(i * 0.45)) * 90
+      );
 
-          <small>YOUR MUSIC. YOUR VOICE. YOUR NADA</small>
-        </div>
+      const delay = (i * 45) / 1000;
+      const duration = (55 + (i % 7) * 13) / 100;
+
+      return (
+        <span
+          key={i}
+          style={{
+            '--height': `${height}px`,
+            '--delay': `${delay}s`,
+            '--duration': `${duration}s`,
+          } as CSSProperties}
+        />
+      );
+    })}
+  </div>
+
+  <small>YOUR MUSIC. YOUR VOICE. YOUR NADA</small>
+</div>
+
       </section>
 
       {/* CONNECT */}
