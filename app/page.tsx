@@ -1,9 +1,9 @@
+
 'use client';
 
 import Link from 'next/link';
 import { useEffect } from 'react';
 import type { CSSProperties } from 'react';
-
 
 const APP_STORE_URL = 'https://apps.apple.com/kr/search?term=NADA';
 
@@ -28,6 +28,7 @@ export default function HomePage() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
           }
         });
       },
@@ -127,14 +128,20 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* MARQUEE */}
+        {/* PURPLE MARQUEE */}
 
-        <div className="nt-marquee" aria-label="NADA music culture">
+        <div
+          className="nt-marquee nt-marquee-purple"
+          aria-label="NADA music culture"
+        >
           <div className="nt-marquee-track">
             {[0, 1].map((group) => (
               <div className="nt-marquee-group" key={group}>
                 {marqueeItems.map((item, index) => (
-                  <span className="nt-marquee-item" key={`${group}-${item}`}>
+                  <span
+                    className="nt-marquee-item"
+                    key={`${group}-${item}`}
+                  >
                     {item}
                     <i>
                       {index % 2 === 0 ? '✳' : '★'}
@@ -202,10 +209,10 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* AUDIO EQUALIZER */}
+        {/* 48-BAR AUDIO EQUALIZER */}
 
-        <div className="nt-wave">
-          <div className="nt-wave-bars">
+        <div className="nt-wave nt-equalizer">
+          <div className="nt-wave-bars nt-equalizer-bars">
             {Array.from({ length: 48 }).map((_, i) => (
               <span
                 key={i}

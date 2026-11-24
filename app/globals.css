@@ -21,7 +21,7 @@ body {
 }
 
 /* ========================================
-   NADA TEST - INDEPENDENT DESIGN
+   NADA - INDEPENDENT DESIGN
 ======================================== */
 
 .nada-test {
@@ -257,7 +257,9 @@ body {
   letter-spacing: 2px;
 }
 
-/* DISCOVER */
+/* ========================================
+   01 - DISCOVER
+======================================== */
 
 .nada-test .nt-discover {
   min-height: 100svh;
@@ -276,6 +278,71 @@ body {
   letter-spacing: -6px;
   margin: 35px 0;
 }
+
+/* PURPLE MARQUEE */
+
+.nada-test .nt-marquee {
+  position: relative;
+  width: calc(100% + 24vw);
+  margin: 75px -12vw 70px;
+  padding: 22px 0;
+  overflow: hidden;
+  background: linear-gradient(
+    100deg,
+    #6c3bd1,
+    #a77bff 48%,
+    #7050dc
+  );
+  border-top: 1px solid #d5bdff66;
+  border-bottom: 1px solid #d5bdff66;
+  box-shadow:
+    0 0 35px #895aff35,
+    inset 0 0 25px #ffffff12;
+  transform: rotate(-2deg);
+}
+
+.nada-test .nt-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: nt-marquee-scroll 32s linear infinite;
+  will-change: transform;
+}
+
+.nada-test .nt-marquee-group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.nada-test .nt-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 28px;
+  padding: 0 28px;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  white-space: nowrap;
+}
+
+.nada-test .nt-marquee-item i {
+  color: #e4d5ff;
+  font-size: 21px;
+  font-style: normal;
+}
+
+@keyframes nt-marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ALBUM CARDS */
 
 .nada-test .nt-albums {
   display: grid;
@@ -340,7 +407,9 @@ body {
   letter-spacing: 3px;
 }
 
-/* ARTIST */
+/* ========================================
+   02 - CREATE / EQUALIZER
+======================================== */
 
 .nada-test .nt-artist {
   min-height: 100svh;
@@ -354,6 +423,7 @@ body {
 }
 
 .nada-test .nt-wave {
+  width: 100%;
   min-height: 220px;
   margin-top: 65px;
   display: flex;
@@ -369,26 +439,80 @@ body {
   gap: 5px;
   height: 150px;
   width: 100%;
+  overflow: hidden;
 }
 
 .nada-test .nt-wave-bars span {
-  width: 4px;
-  height: var(--height);
+  display: block;
+  flex: 0 0 5px;
+  width: 5px;
+  height: var(--height, 40px);
   border-radius: 10px;
-  background: linear-gradient(to top, #4b38c7, #bd91ff);
-  box-shadow: 0 0 12px #895aff88;
-  animation: nt-equalizer 1.2s ease-in-out infinite alternate;
-  animation-delay: var(--delay);
+  background: linear-gradient(
+    to top,
+    #4b38c7 0%,
+    #895aff 50%,
+    #d0b5ff 100%
+  );
+  box-shadow:
+    0 0 8px #895aff88,
+    0 0 18px #895aff33;
+  transform: scaleY(.25);
+  transform-origin: center;
+  animation: nt-equalizer var(--duration, 1.2s) ease-in-out infinite alternate;
+  animation-delay: var(--delay, 0s);
+  will-change: transform, opacity;
+}
+
+/* JSX 전용 이퀄라이저 클래스 */
+
+.nada-test .nt-equalizer {
+  width: 100%;
+  margin-top: 65px;
+}
+
+.nada-test .nt-equalizer-bars {
+  height: 150px;
+  width: 100%;
+  gap: 5px;
+  overflow: hidden;
+}
+
+.nada-test .nt-equalizer-bars span {
+  flex-shrink: 0;
+  animation-duration: var(--duration, 1.2s);
+  animation-delay: var(--delay, 0s);
 }
 
 .nada-test .nt-wave small {
+  display: block;
+  margin-top: 25px;
+  color: #aaa0ca;
   font-size: 9px;
   letter-spacing: 4px;
-  color: #aaa0ca;
-  margin-top: 25px;
+  text-align: center;
 }
 
-/* CONNECT */
+@keyframes nt-equalizer {
+  0% {
+    transform: scaleY(.2);
+    opacity: .5;
+  }
+
+  50% {
+    transform: scaleY(.85);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleY(.35);
+    opacity: .7;
+  }
+}
+
+/* ========================================
+   03 - CONNECT
+======================================== */
 
 .nada-test .nt-connect {
   min-height: 100svh;
@@ -556,23 +680,29 @@ body {
 /* ANIMATIONS */
 
 @keyframes nt-float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-25px) rotate(5deg); }
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-25px) rotate(5deg);
+  }
 }
 
 @keyframes nt-album-float {
-  0%, 100% { translate: 0 0; }
-  50% { translate: 0 -13px; }
-}
+  0%, 100% {
+    translate: 0 0;
+  }
 
-@keyframes nt-equalizer {
-  0% { transform: scaleY(.2); opacity: .5; }
-  50% { transform: scaleY(.85); opacity: 1; }
-  100% { transform: scaleY(.35); opacity: .7; }
+  50% {
+    translate: 0 -13px;
+  }
 }
 
 @keyframes nt-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* MOBILE */
@@ -628,6 +758,25 @@ body {
     letter-spacing: -4px;
   }
 
+  /* 모바일 MARQUEE */
+
+  .nada-test .nt-marquee {
+    width: calc(100% + 14vw);
+    margin: 60px -7vw 55px;
+    padding: 17px 0;
+  }
+
+  .nada-test .nt-marquee-item {
+    font-size: 13px;
+    gap: 18px;
+    padding: 0 18px;
+    letter-spacing: 3px;
+  }
+
+  .nada-test .nt-marquee-item i {
+    font-size: 17px;
+  }
+
   .nada-test .nt-albums {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
@@ -673,6 +822,27 @@ body {
 
   .nada-test .nt-footer-links {
     gap: 16px;
+  }
+
+  /* 모바일 이퀄라이저 */
+
+  .nada-test .nt-wave {
+    margin-top: 45px;
+  }
+
+  .nada-test .nt-wave-bars {
+    gap: 3px;
+    height: 120px;
+  }
+
+  .nada-test .nt-wave-bars span {
+    flex-basis: 4px;
+    width: 4px;
+  }
+
+  .nada-test .nt-wave small {
+    font-size: 8px;
+    letter-spacing: 3px;
   }
 }
 
