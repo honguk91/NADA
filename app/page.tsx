@@ -56,7 +56,7 @@ export default function HomePage() {
           rel="noreferrer"
           className="nt-nav-button"
         >
-          DOWNLOAD APP ↗
+          DOWNLOAD APP
         </a>
       </nav>
 
@@ -89,7 +89,7 @@ export default function HomePage() {
           </p>
 
           <a href="#discover" className="nt-button">
-            EXPLORE NADA <span>↗</span>
+            EXPLORE NADA
           </a>
         </div>
 
@@ -130,29 +130,26 @@ export default function HomePage() {
 
         {/* PURPLE MARQUEE */}
 
-        <div
-          className="nt-marquee nt-marquee-purple"
-          aria-label="NADA music culture"
-        >
-          <div className="nt-marquee-track">
-            {[0, 1].map((group) => (
-              <div className="nt-marquee-group" key={group}>
-                {marqueeItems.map((item, index) => (
-                  <span
-                    className="nt-marquee-item"
-                    key={`${group}-${item}`}
-                  >
-                    {item}
-                    <i>
-                      {index % 2 === 0 ? '✳' : '★'}
-                    </i>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
+     <div
+  className="nt-marquee nt-marquee-purple"
+  aria-label="NADA music culture"
+>
+  <div className="nt-marquee-track">
+    {[0, 1].map((group) => (
+      <div className="nt-marquee-group" key={group}>
+        {marqueeItems.map((item, index) => (
+          <span
+            className="nt-marquee-item"
+            key={`${group}-${item}`}
+          >
+            {item}
+            <i>★</i>
+          </span>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
         {/* ALBUM CARDS */}
 
         <div className="nt-albums">
@@ -326,7 +323,7 @@ export default function HomePage() {
             rel="noreferrer"
             className="nt-download-button"
           >
-            DOWNLOAD NADA APP ↗
+            DOWNLOAD NADA APP 
           </a>
         </div>
 
