@@ -850,6 +850,7 @@ body {
 
 /* REDUCED MOTION */
 
+/*
 @media (prefers-reduced-motion: reduce) {
   .nada-test *,
   .nada-test *::before,
@@ -864,3 +865,4 @@ body {
     transform: none;
   }
 }
+*/
