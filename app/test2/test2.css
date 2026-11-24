@@ -1,0 +1,644 @@
+
+/* NADA TEST - INDEPENDENT DESIGN */
+
+.nada-test {
+  --nt-purple: #a77bff;
+  --nt-blue: #6865ff;
+  background: #07070c;
+  color: #f5f3ff;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+  overflow: hidden;
+}
+
+.nada-test * {
+  box-sizing: border-box;
+}
+
+.nada-test a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.nada-test section {
+  position: relative;
+}
+
+/* NAV */
+
+.nada-test .nt-nav {
+  height: 76px;
+  padding: 0 7%;
+  position: absolute;
+  z-index: 20;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ffffff12;
+}
+
+.nada-test .nt-logo {
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: -2px;
+}
+
+.nada-test .nt-nav > span,
+.nada-test .nt-nav-button {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #aaa6c2;
+}
+
+.nada-test .nt-nav-button {
+  padding: 13px 20px;
+  border: 1px solid #ffffff55;
+  border-radius: 30px;
+  color: white;
+  transition: .3s;
+}
+
+.nada-test .nt-nav-button:hover {
+  background: white;
+  color: black;
+}
+
+/* HERO */
+
+.nada-test .nt-hero {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: 140px 12% 100px;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 75% 50%, #26114c, transparent 45%),
+    radial-gradient(ellipse at 20% 85%, #11112c, transparent 50%),
+    #07070c;
+}
+
+.nada-test .nt-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: .12;
+  background-image:
+    linear-gradient(#ffffff20 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff20 1px, transparent 1px);
+  background-size: 65px 65px;
+  mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.nada-test .nt-glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  right: 10%;
+  top: 30%;
+  background: #793de8;
+  filter: blur(150px);
+  opacity: .22;
+}
+
+.nada-test .nt-hero-content {
+  position: relative;
+  z-index: 4;
+}
+
+.nada-test .nt-eyebrow {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #a99bcf;
+}
+
+.nada-test .nt-eyebrow > span {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #ad81ff;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #ad81ff;
+  margin-right: 10px;
+}
+
+.nada-test .nt-hero h1 {
+  font-size: clamp(65px, 10vw, 145px);
+  line-height: .88;
+  font-weight: 900;
+  letter-spacing: -8px;
+  margin: 40px 0;
+}
+
+.nada-test .nt-hero h1 span,
+.nada-test .nt-section-heading h2 span,
+.nada-test .nt-artist-content h2 span,
+.nada-test .nt-connect-text h2 span,
+.nada-test .nt-download h2 span {
+  color: var(--nt-purple);
+}
+
+.nada-test .nt-hero-content p,
+.nada-test .nt-section-heading p,
+.nada-test .nt-artist-content p,
+.nada-test .nt-connect-text p,
+.nada-test .nt-download-content p {
+  color: #aaa6bc;
+  font-size: 14px;
+  line-height: 2;
+}
+
+.nada-test .nt-button {
+  margin-top: 32px;
+  display: inline-flex;
+  gap: 35px;
+  align-items: center;
+  padding: 17px 25px;
+  border: 1px solid #9570e8;
+  border-radius: 40px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  transition: .3s;
+}
+
+.nada-test .nt-button:hover {
+  background: #8957e8;
+  box-shadow: 0 0 40px #8957e866;
+}
+
+/* PLANET */
+
+.nada-test .nt-planet {
+  position: absolute;
+  right: 8%;
+  top: 22%;
+  width: min(38vw, 450px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  animation: nt-float 7s ease-in-out infinite;
+}
+
+.nada-test .nt-planet-core {
+  width: 42%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    #e7d7ff,
+    #9861f0 30%,
+    #38156d 65%,
+    #08070f
+  );
+  box-shadow: 0 0 100px #914fff88, inset -20px -20px 50px #0008;
+}
+
+.nada-test .nt-orbit {
+  position: absolute;
+  width: 75%;
+  height: 75%;
+  border: 1px solid #a879ff66;
+  border-radius: 50%;
+}
+
+.nada-test .nt-orbit-one {
+  transform: rotateX(68deg) rotateZ(-30deg);
+}
+
+.nada-test .nt-orbit-two {
+  width: 95%;
+  height: 45%;
+  transform: rotateX(60deg) rotateZ(35deg);
+  border-color: #5f83ff77;
+}
+
+.nada-test .nt-orbit-three {
+  width: 65%;
+  height: 90%;
+  transform: rotateY(65deg) rotateZ(25deg);
+  border-color: #c28aff44;
+}
+
+.nada-test .nt-hero-footer {
+  position: absolute;
+  bottom: 30px;
+  left: 7%;
+  right: 7%;
+  display: flex;
+  justify-content: space-between;
+  color: #716d86;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+/* DISCOVER */
+
+.nada-test .nt-discover {
+  min-height: 100svh;
+  padding: 150px 12%;
+  background:
+    radial-gradient(ellipse at 90% 45%, #21103f, transparent 50%),
+    #090910;
+}
+
+.nada-test .nt-section-heading h2,
+.nada-test .nt-artist-content h2,
+.nada-test .nt-connect-text h2 {
+  font-size: clamp(55px, 8vw, 110px);
+  font-weight: 900;
+  line-height: .95;
+  letter-spacing: -6px;
+  margin: 35px 0;
+}
+
+.nada-test .nt-albums {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 90px 0 50px;
+  perspective: 1000px;
+}
+
+.nada-test .nt-album {
+  aspect-ratio: 1;
+  padding: 20px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 25px 70px #0008;
+  transition: transform .5s, box-shadow .5s;
+  animation: nt-album-float 5s ease-in-out infinite;
+}
+
+.nada-test .nt-album:hover {
+  transform: translateY(-20px) rotateY(-8deg) scale(1.04);
+  box-shadow: 0 30px 80px #8755ff44;
+}
+
+.nada-test .nt-album small,
+.nada-test .nt-album > span {
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+.nada-test .nt-album strong {
+  font-size: clamp(20px, 3vw, 42px);
+  letter-spacing: -2px;
+}
+
+.nada-test .album-one {
+  background: radial-gradient(circle at 70% 30%, #bd9cff, #5a23ad 45%, #100b20);
+}
+
+.nada-test .album-two {
+  background: radial-gradient(circle at 30% 30%, #7c9bff, #152e75 45%, #070b1a);
+  animation-delay: -.8s;
+}
+
+.nada-test .album-three {
+  background: radial-gradient(circle at 70% 70%, #e0a5ff, #752b85 45%, #17091d);
+  animation-delay: -1.6s;
+}
+
+.nada-test .album-four {
+  background: radial-gradient(circle at 30% 40%, #72c6ff, #154c79 45%, #07131e);
+  animation-delay: -2.4s;
+}
+
+.nada-test .nt-caption {
+  display: flex;
+  justify-content: space-between;
+  color: #716d86;
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+
+/* ARTIST */
+
+.nada-test .nt-artist {
+  min-height: 100svh;
+  padding: 150px 12%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 85%, #28144a, transparent 55%),
+    #07070c;
+}
+
+.nada-test .nt-wave {
+  min-height: 220px;
+  margin-top: 65px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.nada-test .nt-wave-bars {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 150px;
+  width: 100%;
+}
+
+.nada-test .nt-wave-bars span {
+  width: 4px;
+  height: var(--height);
+  border-radius: 10px;
+  background: linear-gradient(to top, #4b38c7, #bd91ff);
+  box-shadow: 0 0 12px #895aff88;
+  animation: nt-equalizer 1.2s ease-in-out infinite alternate;
+  animation-delay: var(--delay);
+}
+
+.nada-test .nt-wave small {
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: #aaa0ca;
+  margin-top: 25px;
+}
+
+/* CONNECT */
+
+.nada-test .nt-connect {
+  min-height: 100svh;
+  padding: 120px 12%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  background: #090912;
+}
+
+.nada-test .nt-network {
+  width: 400px;
+  height: 400px;
+  position: relative;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+.nada-test .nt-network-core {
+  width: 90px;
+  height: 90px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #c7a5ff, #7737db 60%, #190c36);
+  box-shadow: 0 0 70px #8b55ff99;
+  font-size: 36px;
+  font-weight: 900;
+  z-index: 3;
+}
+
+.nada-test .nt-network-ring {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border: 1px solid #9163ff55;
+  border-radius: 50%;
+  animation: nt-spin 25s linear infinite;
+}
+
+.nada-test .nt-network-ring.outer {
+  width: 350px;
+  height: 350px;
+  border-color: #557aff33;
+  animation-direction: reverse;
+  animation-duration: 35s;
+}
+
+.nada-test .nt-node {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ac85ff;
+  box-shadow: 0 0 20px #9b68ff;
+  transform: rotate(var(--angle)) translateX(var(--distance));
+}
+
+/* DOWNLOAD */
+
+.nada-test .nt-download {
+  min-height: 100svh;
+  padding: 130px 20px 100px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 60%, #321568, transparent 48%),
+    #07070c;
+}
+
+.nada-test .nt-download-content {
+  position: relative;
+  z-index: 2;
+}
+
+.nada-test .nt-big-logo {
+  font-size: clamp(90px, 16vw, 180px);
+  font-weight: 900;
+  letter-spacing: -12px;
+  margin: 35px 0;
+}
+
+.nada-test .nt-big-logo span {
+  color: var(--nt-purple);
+}
+
+.nada-test .nt-download h2 {
+  font-size: clamp(45px, 7vw, 90px);
+  font-weight: 900;
+  line-height: .95;
+  letter-spacing: -5px;
+}
+
+.nada-test .nt-download-content p {
+  margin: 30px 0;
+}
+
+.nada-test .nt-download-button {
+  display: inline-block;
+  padding: 20px 35px;
+  border-radius: 50px;
+  background: white;
+  color: #111;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  transition: .3s;
+}
+
+.nada-test .nt-download-button:hover {
+  background: #b18aff;
+  box-shadow: 0 0 45px #a06aff88;
+  transform: translateY(-4px);
+}
+
+.nada-test .nt-bottom {
+  position: absolute;
+  bottom: 30px;
+  left: 7%;
+  right: 7%;
+  display: flex;
+  justify-content: space-between;
+  color: #77738a;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+/* SCROLL REVEAL */
+
+.nada-test .reveal {
+  opacity: 0;
+  transform: translateY(45px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.nada-test .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ANIMATIONS */
+
+@keyframes nt-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-25px) rotate(5deg); }
+}
+
+@keyframes nt-album-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -13px; }
+}
+
+@keyframes nt-equalizer {
+  from { transform: scaleY(.35); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes nt-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .nada-test .nt-nav {
+    height: 65px;
+    padding: 0 6%;
+  }
+
+  .nada-test .nt-nav > span {
+    display: none;
+  }
+
+  .nada-test .nt-nav-button {
+    padding: 10px 14px;
+    font-size: 9px;
+  }
+
+  .nada-test .nt-hero {
+    min-height: 90svh;
+    padding: 150px 7% 110px;
+    align-items: flex-start;
+  }
+
+  .nada-test .nt-hero h1 {
+    font-size: clamp(65px, 16vw, 100px);
+    letter-spacing: -5px;
+  }
+
+  .nada-test .nt-planet {
+    width: 260px;
+    right: -100px;
+    top: 48%;
+    opacity: .55;
+  }
+
+  .nada-test .nt-hero-footer {
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+
+  .nada-test .nt-discover,
+  .nada-test .nt-artist {
+    padding: 110px 7%;
+    min-height: auto;
+  }
+
+  .nada-test .nt-section-heading h2,
+  .nada-test .nt-artist-content h2,
+  .nada-test .nt-connect-text h2 {
+    font-size: clamp(48px, 12vw, 75px);
+    letter-spacing: -4px;
+  }
+
+  .nada-test .nt-albums {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 60px 0 30px;
+  }
+
+  .nada-test .nt-album {
+    padding: 14px;
+  }
+
+  .nada-test .nt-album strong {
+    font-size: 28px;
+  }
+
+  .nada-test .nt-connect {
+    min-height: auto;
+    padding: 110px 7%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nada-test .nt-network {
+    width: 100%;
+    height: 320px;
+    transform: scale(.8);
+    transform-origin: center;
+  }
+
+  .nada-test .nt-big-logo {
+    letter-spacing: -7px;
+  }
+
+  .nada-test .nt-download h2 {
+    letter-spacing: -3px;
+  }
+
+  .nada-test .nt-bottom {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nada-test *,
+  .nada-test *::before,
+  .nada-test *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+
+  .nada-test .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

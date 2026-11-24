@@ -1,159 +1,334 @@
+'use client';
 
 import Link from 'next/link';
+import { useEffect } from 'react';
+import type { CSSProperties } from 'react';
+
 
 const APP_STORE_URL = 'https://apps.apple.com/kr/search?term=NADA';
 
+const marqueeItems = [
+  'CREATE',
+  'DISCOVER',
+  'ARTIST',
+  'INDEPENDENT MUSIC',
+  'COMMUNITY',
+  'SHARE YOUR SOUND',
+  'NADA',
+];
+
 export default function HomePage() {
+  useEffect(() => {
+    const elements = document.querySelectorAll(
+      '.nada-test .reveal'
+    );
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <main className="nada">
+    <main className="nada-test">
 
-      {/* 상단 메뉴 */}
-      <header className="header">
-        <Link href="/" className="logo">NADA.</Link>
-        <a href="#download" className="header-button">
-          앱 다운로드
-        </a>
-      </header>
+      {/* NAVIGATION */}
 
-      {/* 메인 화면 */}
-      <section className="hero">
-        <div className="hero-content">
-          <span className="eyebrow">A NEW MUSIC PLATFORM</span>
-          <h1>
-            당신의 음악을<br />
-            세상과 연결하다.
-          </h1>
-          <p>
-            음악을 듣고, 만들고, 공유하는 새로운 경험.<br />
-            당신의 음악 이야기를 NADA에서 시작하세요.
-          </p>
-          <a href="#download" className="primary-button">
-            NADA 시작하기 <span>→</span>
-          </a>
-        </div>
+      <nav className="nt-nav">
+        <a href="#home" className="nt-logo">NADA</a>
 
-        <div className="hero-art">
-          <div className="art-circle"></div>
-          <div className="phone">
-            <div className="phone-top">NADA.</div>
-            <div className="phone-label">YOUR MUSIC</div>
-            <div className="album-art">
-              <span>♪</span>
-            </div>
-            <div className="phone-song">Discover your sound.</div>
-            <div className="phone-sub">MUSIC FOR EVERYONE</div>
-            <div className="phone-player">
-              <span>Ⅱ</span>
-              <span>♡</span>
-            </div>
-          </div>
-          <div className="floating-note">♫</div>
-        </div>
-      </section>
+        <span>INDEPENDENT MUSIC PLATFORM</span>
 
-      {/* 음악 감상 */}
-      <section className="feature">
-        <div className="feature-text">
-          <span className="eyebrow">01 / DISCOVER MUSIC</span>
-          <h2>
-            새로운 음악을<br />
-            발견하는 즐거움.
-          </h2>
-          <p>
-            다양한 장르의 음악을 만나고<br />
-            지금까지 몰랐던 새로운 아티스트를 발견하세요.
-          </p>
-        </div>
-        <div className="visual visual-music">
-          <div className="music-card">
-            <div className="music-cover cover-one">N</div>
-            <div className="music-cover cover-two">A</div>
-            <div className="music-cover cover-three">♪</div>
-            <div className="music-cover cover-four">D</div>
-          </div>
-          <div className="visual-caption">FIND YOUR NEXT FAVORITE.</div>
-        </div>
-      </section>
-
-      {/* 아티스트 */}
-      <section className="feature reverse">
-        <div className="feature-text">
-          <span className="eyebrow">02 / BE AN ARTIST</span>
-          <h2>
-            당신의 음악이<br />
-            누군가의 시작이 되도록.
-          </h2>
-          <p>
-            나만의 음악을 세상에 들려주세요.<br />
-            NADA에서 새로운 팬과 음악으로 연결됩니다.
-          </p>
-        </div>
-        <div className="visual visual-artist">
-          <div className="artist-symbol">♫</div>
-          <div className="artist-text">
-            <span>YOUR SOUND</span>
-            <strong>YOUR STORY.</strong>
-          </div>
-          <div className="sound-bars">
-            {Array.from({ length: 24 }).map((_, i) => (
-              <span key={i} style={{ height: `${15 + ((i * 17) % 65)}px` }} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 커뮤니티 */}
-      <section className="community">
-        <span className="eyebrow">03 / CONNECT THROUGH MUSIC</span>
-        <h2>
-          음악으로 연결되는<br />
-          새로운 사람들.
-        </h2>
-        <p>
-          좋아하는 아티스트를 응원하고<br />
-          음악을 통해 더 가까워지는 경험.
-        </p>
-        <div className="community-visual">
-          <div className="community-circle circle-one">N</div>
-          <div className="community-circle circle-two">♫</div>
-          <div className="community-circle circle-three">A</div>
-          <div className="community-circle circle-four">D</div>
-        </div>
-      </section>
-
-      {/* 다운로드 */}
-      <section className="download" id="download">
-        <span className="eyebrow">WELCOME TO NADA</span>
-        <h2>
-          당신의 음악,<br />
-          이제 NADA에서.
-        </h2>
-        <p>
-          새로운 음악의 경험을 지금 시작해 보세요.
-        </p>
         <a
           href={APP_STORE_URL}
           target="_blank"
-          rel="noopener noreferrer"
-          className="download-button"
+          rel="noreferrer"
+          className="nt-nav-button"
         >
-          App Store에서 다운로드 <span>↗</span>
+          DOWNLOAD APP ↗
         </a>
-        <div className="download-logo">NADA.</div>
+      </nav>
+
+      {/* HERO */}
+
+      <section className="nt-hero" id="home">
+        <div className="nt-grid" />
+        <div className="nt-glow" />
+
+        <div className="nt-hero-content reveal">
+          <span className="nt-eyebrow">
+            <span />
+            A NEW WAY TO EXPERIENCE MUSIC
+          </span>
+
+          <h1>
+            MUSIC
+            <br />
+            HAS NO
+            <br />
+            <span>LIMITS.</span>
+          </h1>
+
+          <p>
+            Discover new sounds.
+            <br />
+            Create your own universe.
+            <br />
+            Connect through music.
+          </p>
+
+          <a href="#discover" className="nt-button">
+            EXPLORE NADA <span>↗</span>
+          </a>
+        </div>
+
+        <div className="nt-planet">
+          <div className="nt-planet-core" />
+          <div className="nt-orbit nt-orbit-one" />
+          <div className="nt-orbit nt-orbit-two" />
+          <div className="nt-orbit nt-orbit-three" />
+        </div>
+
+        <div className="nt-hero-footer">
+          <span>INDEPENDENT MUSIC</span>
+          <span>CREATE YOUR OWN SOUND</span>
+          <span>EST. NADA</span>
+        </div>
       </section>
 
-      {/* 하단 */}
-      <footer className="footer">
-        <div className="footer-logo">NADA.</div>
-        <div className="footer-links">
-          <Link href="/privacy-policy">개인정보 처리방침</Link>
-          <Link href="/admin/login">관리자</Link>
-        </div>
-        <p>© NADA. All rights reserved.</p>
-      </footer>
+      {/* DISCOVER */}
 
-      {/* 디자인 */}
-      
+      <section className="nt-discover" id="discover">
+        <div className="nt-section-heading reveal">
+          <span className="nt-eyebrow">
+            01 — DISCOVER
+          </span>
+
+          <h2>
+            A WORLD
+            <br />
+            BEYOND <span>SOUND.</span>
+          </h2>
+
+          <p>
+            Explore music beyond boundaries.
+            <br />
+            Find sounds that speak to you.
+          </p>
+        </div>
+
+        {/* MARQUEE */}
+
+        <div className="nt-marquee" aria-label="NADA music culture">
+          <div className="nt-marquee-track">
+            {[0, 1].map((group) => (
+              <div className="nt-marquee-group" key={group}>
+                {marqueeItems.map((item, index) => (
+                  <span className="nt-marquee-item" key={`${group}-${item}`}>
+                    {item}
+                    <i>
+                      {index % 2 === 0 ? '✳' : '★'}
+                    </i>
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ALBUM CARDS */}
+
+        <div className="nt-albums">
+          <div className="nt-album album-one">
+            <small>NADA ORIGINAL 001</small>
+            <strong>PURE<br />SOUND.</strong>
+            <span>01 / DISCOVER</span>
+          </div>
+
+          <div className="nt-album album-two">
+            <small>NADA ORIGINAL 002</small>
+            <strong>NEW<br />WAVE.</strong>
+            <span>02 / EXPLORE</span>
+          </div>
+
+          <div className="nt-album album-three">
+            <small>NADA ORIGINAL 003</small>
+            <strong>YOUR<br />VIBE.</strong>
+            <span>03 / FEEL</span>
+          </div>
+
+          <div className="nt-album album-four">
+            <small>NADA ORIGINAL 004</small>
+            <strong>FRESH<br />SOUND.</strong>
+            <span>04 / LISTEN</span>
+          </div>
+        </div>
+
+        <div className="nt-caption">
+          <span>NEW ARTISTS</span>
+          <span>NEW MUSIC</span>
+          <span>NEW EXPERIENCES</span>
+        </div>
+      </section>
+
+      {/* CREATE */}
+
+      <section className="nt-artist" id="artist">
+        <div className="nt-artist-content reveal">
+          <span className="nt-eyebrow">
+            02 — CREATE
+          </span>
+
+          <h2>
+            YOUR SOUND.
+            <br />
+            YOUR <span>UNIVERSE.</span>
+          </h2>
+
+          <p>
+            Your music deserves to be heard.
+            <br />
+            Create, upload and share your sound with the world.
+          </p>
+        </div>
+
+        {/* AUDIO EQUALIZER */}
+
+        <div className="nt-wave">
+          <div className="nt-wave-bars">
+            {Array.from({ length: 48 }).map((_, i) => (
+              <span
+                key={i}
+                style={{
+                  '--height': `${20 + Math.abs(Math.sin(i * 0.45)) * 90}px`,
+                  '--delay': `${i * 0.045}s`,
+                  '--duration': `${0.55 + (i % 7) * 0.13}s`,
+                } as CSSProperties}
+              />
+            ))}
+          </div>
+
+          <small>YOUR MUSIC. YOUR VOICE. YOUR NADA</small>
+        </div>
+      </section>
+
+      {/* CONNECT */}
+
+      <section className="nt-connect" id="connect">
+        <div className="nt-connect-text reveal">
+          <span className="nt-eyebrow">
+            03 — CONNECT
+          </span>
+
+          <h2>
+            MUSIC
+            <br />
+            CONNECTS
+            <br />
+            <span>US ALL.</span>
+          </h2>
+
+          <p>
+            Meet artists.
+            <br />
+            Discover communities.
+            <br />
+            Connect through the sounds you love.
+          </p>
+        </div>
+
+        <div className="nt-network">
+          <div className="nt-network-ring">
+            {[0, 60, 120, 180, 240, 300].map((angle) => (
+              <span
+                key={angle}
+                className="nt-node"
+                style={{
+                  '--angle': `${angle}deg`,
+                  '--distance': '125px',
+                } as CSSProperties}
+              />
+            ))}
+          </div>
+
+          <div className="nt-network-ring outer">
+            {[30, 90, 150, 210, 270, 330].map((angle) => (
+              <span
+                key={angle}
+                className="nt-node"
+                style={{
+                  '--angle': `${angle}deg`,
+                  '--distance': '175px',
+                } as CSSProperties}
+              />
+            ))}
+          </div>
+
+          <div className="nt-network-core">N</div>
+        </div>
+      </section>
+
+      {/* DOWNLOAD */}
+
+      <section className="nt-download" id="download">
+        <div className="nt-download-content reveal">
+          <span className="nt-eyebrow">
+            YOUR NEXT MUSIC EXPERIENCE
+          </span>
+
+          <div className="nt-big-logo">
+            <span>NADA</span>
+          </div>
+
+          <h2>
+            THE NEXT
+            <br />
+            SOUND IS <span>YOURS.</span>
+          </h2>
+
+          <p>
+            Discover. Create. Connect.
+            <br />
+            Start your journey with NADA
+          </p>
+
+          <a
+            href={APP_STORE_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="nt-download-button"
+          >
+            DOWNLOAD NADA APP ↗
+          </a>
+        </div>
+
+        <div className="nt-bottom">
+          <span>© NADA ALL RIGHTS RESERVED.</span>
+
+          <div className="nt-footer-links">
+            <Link href="/privacy-policy">
+              PRIVACY POLICY
+            </Link>
+
+            <Link href="/admin/login">
+              ADMIN
+            </Link>
+          </div>
+
+          <span>INDEPENDENT MUSIC PLATFORM</span>
+        </div>
+      </section>
+
     </main>
   );
 }
